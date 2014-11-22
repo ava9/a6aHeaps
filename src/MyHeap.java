@@ -39,14 +39,14 @@ public class MyHeap<T> implements MinHeap<T> {
 
     /** Return the size of this heap. */
     public @Override int size() {
-        //TODO
-        return 0;
+        
+    	return heap.size();
     }
 
     /** Return true iff the heap is empty. */
     public @Override boolean isEmpty() {
-        //TODO
-        return false;
+        
+    	return heap.size() == 0;
     }
     
     public static class HeapEntry{
