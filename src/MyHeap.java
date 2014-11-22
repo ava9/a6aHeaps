@@ -4,8 +4,14 @@ import java.util.HashMap;
 /** An instance is a heap of elements of type T. */
 public class MyHeap<T> implements MinHeap<T> {
     
+	ArrayList<HeapEntry> heap = new ArrayList<HeapEntry>();
+	HashMap<T, HeapEntry> heapMap = new HashMap<T, HeapEntry>();
+	
     /** Constructor: an empty heap. */
-    public MyHeap() { }
+    public MyHeap() { 
+    	
+    	
+    }
 
     /** Return a representation of this heap. */
     public @Override String toString(){
@@ -28,7 +34,7 @@ public class MyHeap<T> implements MinHeap<T> {
 
     /** Change the priority of item to p. */
     public @Override void updatePriority(T item, double p) {
-        //TODO
+        
     }
 
     /** Return the size of this heap. */
@@ -41,5 +47,16 @@ public class MyHeap<T> implements MinHeap<T> {
     public @Override boolean isEmpty() {
         //TODO
         return false;
+    }
+    
+    public static class HeapEntry{
+    	
+    	public int index;
+    	public double priority;
+    	
+    	public HeapEntry(int i, double p){
+    		this.index = i;
+    		this.priority = p;
+    	}
     }
 }
