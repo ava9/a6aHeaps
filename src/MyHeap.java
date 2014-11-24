@@ -4,13 +4,14 @@ import java.util.HashMap;
 /** An instance is a heap of elements of type T. */
 public class MyHeap<T> implements MinHeap<T> {
     
-	ArrayList<HeapEntry> heap;
-	HashMap<MyHeap<T>, HeapEntry> heapMap;
+	ArrayList<T> heap;
+	HashMap<T, HeapEntry> heapMap;
+	HeapEntry entry;
 	
     /** Constructor: an empty heap. */
     public MyHeap() { 
-    	heap = new ArrayList<HeapEntry>();
-    	heapMap = new HashMap<MyHeap<T>, HeapEntry>();
+    	heap = new ArrayList<T>();
+    	heapMap = new HashMap<T, HeapEntry>(); 	
     }
 
     /** Return a representation of this heap. */
@@ -29,11 +30,19 @@ public class MyHeap<T> implements MinHeap<T> {
     /** Add item with priority p to this heap.
      * Throw IllegalArgumentException if an equal item is already in the heap. */
     public @Override void add(T item, double p) throws IllegalArgumentException {
-        //TODO 
+        
+    	if(item == null || heapMap.containsKey(item)){
+    		throw new IllegalArgumentException();
+    	}
+    	
+    	heap.add(item);
+    	heapMap.put(item, new HeapEntry(0, p));
     }
 
     /** Change the priority of item to p. */
     public @Override void updatePriority(T item, double p) {
+    	
+    	/*
         HeapEntry entry = (HeapEntry) item;
         
         if(entry.priority < p){
@@ -47,7 +56,7 @@ public class MyHeap<T> implements MinHeap<T> {
         if(parent.compareTo(entry) > 0){
         	 swap(parent, entry);
         }
-        
+        */
        
     }
 
@@ -90,8 +99,8 @@ public class MyHeap<T> implements MinHeap<T> {
   	 entry1.index = index2;
   	 entry2.index = index1;
   	 
-  	 heap.set(entry1.index, entry2);
-  	 heap.set(entry2.index, entry1);
+  	 //heap.set(entry1.index, entry2);
+  	 //heap.set(entry2.index, entry1);
     
    }
     
@@ -99,10 +108,18 @@ public class MyHeap<T> implements MinHeap<T> {
     	
     	public int index;
     	public double priority;
-    	
+
     	public HeapEntry(int i, double p){
     		this.index = i;
     		this.priority = p;
+    	}
+    	
+    	public int getIndex(){
+    		return index;
+    	}
+    	
+    	public double getPriority(){
+    		return priority;
     	}
     	
     	@Override
