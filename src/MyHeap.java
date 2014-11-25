@@ -36,8 +36,8 @@ public class MyHeap<T> implements MinHeap<T> {
         if(heap.size() == 0){
         	return null;
         }
-        T temp = heap.get(0);
-        bubbleUp(heap.size()-1);
+        T temp = heap.remove(heap.size() - 1);
+        heapMap.remove(temp);
         bubbleDown(0);
         return temp;
     }
