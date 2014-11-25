@@ -36,10 +36,17 @@ public class MyHeap<T> implements MinHeap<T> {
         if(heap.size() == 0){
         	return null;
         }
-        T temp = heap.remove(heap.size() - 1);
-        heapMap.remove(temp);
+        T temp1 = heap.get(0);
+        heapMap.remove(temp1);
+        T temp2 = heap.remove(heap.size() - 1);
+        
+        if (heap.size() == 0){
+        	return temp1;
+        }
+        heap.set(0, temp2);
+        heapMap.get(temp2).index=0;
         bubbleDown(0);
-        return temp;
+        return temp1;
     }
 
     /** Add item with priority p to this heap.
@@ -51,20 +58,22 @@ public class MyHeap<T> implements MinHeap<T> {
     	}
     	
     	heap.add(item);
-    	heapMap.put(item, new HeapEntry(0, p));
+    	heapMap.put(item, new HeapEntry(heap.size()-1, p));
+    	
+    	bubbleUp(heap.size()-1);
     }
 
     /** Change the priority of item to p. */
     public @Override void updatePriority(T item, double p) {
         HeapEntry entry = heapMap.get(item);
-        if(entry.priority < p){
-        	throw new IllegalArgumentException();
-        }
+        double tempPriority = entry.priority;
         entry.priority = p;
-        HeapEntry parent = heapMap.get(heap.get(entry.index));
-        if(parent.compareTo(entry) > 0){
-        	 swap(heap.get(parent.index),heap.get(entry.index));
-        	 bubbleDown(parent.index);
+        //HeapEntry parent = heapMap.get(heap.get(entry.index));
+        if(tempPriority > p){
+        	 bubbleUp(entry.index);
+        }
+        else if (tempPriority < p){
+        	 bubbleDown(entry.index);
         }
     }
 
@@ -90,25 +99,24 @@ public class MyHeap<T> implements MinHeap<T> {
 	}
     /** Bubble element k up the tree */
     private void bubbleUp(int k){
-    	int p = this.getParent(k);
+    	int p = (k-1)/2;
     	while ((k > 0) && (heapMap.get(heap.get(k)).compareTo(heapMap.get(heap.get(p))) < 0)){
     		swap(heap.get(k), heap.get(p));
-    		//k = p;
-    		//p = (k-1)/2;
+    		k = p;
+    		p = (k-1)/2;
     	}
     }
     
     /** Bubble the root down to its heap position. */
     private void bubbleDown(int k){
-    	k = 0;
     	int c = 2*k+2;
     	if ((c > heap.size()-1) || (heapMap.get(heap.get(c-1)).compareTo(heapMap.get(heap.get(c))) < 0)){
     		c--;
     	}
     	while ((c < heap.size()) && ((heapMap.get(heap.get(k)).compareTo(heapMap.get(heap.get(c))) > 0))){
     		swap(heap.get(k), heap.get(c));
-    		//k = c;
-    		//c = 2*k+2;
+    		k = c;
+    		c = 2*k+2;
     		if ((c > heap.size()-1) || (heapMap.get(heap.get(c-1)).compareTo(heapMap.get(heap.get(c))) < 0)){
         		c--;
         	}
@@ -118,7 +126,7 @@ public class MyHeap<T> implements MinHeap<T> {
     //Swap two nodes in the heap
     private void swap(T entry1, T entry2) {
     	
-  	  if (entry1 == null && entry2 == null){
+  	  if (entry1 == null || entry2 == null){
   		
   		  throw new IllegalArgumentException();
   	  }
@@ -126,33 +134,33 @@ public class MyHeap<T> implements MinHeap<T> {
   	  int index1 = heapMap.get(entry1).index;
   	  int index2 = heapMap.get(entry2).index;
   	  
-  	 if (index1 < 0 || index1 > heap.size() || index2 < 0 || index2 > heap.size()){
+  	 if (index1 < 0 || index1 >= heap.size() || index2 < 0 || index2 >= heap.size()){
   		 throw new IllegalArgumentException();
   	 }
  	   
-  	 heapMap.get(entry1).index = heapMap.get(entry2).index;
-  	 heapMap.get(entry2).index = heapMap.get(entry1).index;
+  	 heapMap.get(entry1).index = index2;
+  	 heapMap.get(entry2).index = index1;
   	 
-  	 heap.set(heapMap.get(entry1).index, entry2);
-  	 heap.set(heapMap.get(entry2).index, entry1);
+  	 heap.set(index1, entry2);
+  	 heap.set(index2, entry1);
     
    }
     
-    public static class HeapEntry implements Comparable<HeapEntry>{
+    private class HeapEntry implements Comparable<HeapEntry>{
     	
-    	public int index;
-    	public double priority;
+    	private int index;
+    	private double priority;
 
-    	public HeapEntry(int i, double p){
+    	private HeapEntry(int i, double p){
     		this.index = i;
     		this.priority = p;
     	}
     	
-    	public int getIndex(){
+    	private int getIndex(){
     		return index;
     	}
     	
-    	public double getPriority(){
+    	private double getPriority(){
     		return priority;
     	}
     	
